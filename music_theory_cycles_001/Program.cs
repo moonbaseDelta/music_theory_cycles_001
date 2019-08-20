@@ -589,13 +589,11 @@ namespace music_theory_cycles_001
                 j++;
             }
         }
-
-        //
+         
         public void ChangeTheChordMode(SevenChordMode mode)
         {
-
-        }
-        //
+            // TODO :: Make it changable from any mode to any mode
+        } 
 
         public int GetChordSize()
         {
@@ -608,8 +606,7 @@ namespace music_theory_cycles_001
 
         public string GetChordActualFormula()
         {
-            var notes = ChordNotes.OrderBy(n => n.getNoteNumber());
-
+            var notes = ChordNotes.OrderBy(n => n.getNoteNumber()); 
 
 
             int fInterval = notes.ElementAt(1).getNoteNumber() - notes.ElementAt(0).getNoteNumber();
@@ -706,11 +703,7 @@ namespace music_theory_cycles_001
                             chordo.ChordNotes[1] = notes.Where(no => no.nameOfTheNote == neuChord.ChordNotes[1].nameOfTheNote).First();
                             chordo.ChordNotes[2] = notes.Where(no => no.nameOfTheNote == neuChord.ChordNotes[2].nameOfTheNote).First();
                             chordo.ChordNotes[3] = notes.Where(no => no.nameOfTheNote == neuChord.ChordNotes[3].nameOfTheNote).First();
-
-                            //chordo.ChordNotes[0] = neuChord.ChordNotes[0];
-                            //chordo.ChordNotes[1] = neuChord.ChordNotes[1];
-                            //chordo.ChordNotes[2] = neuChord.ChordNotes[2];
-                            //chordo.ChordNotes[3] = neuChord.ChordNotes[3];
+                             
 
                             chordo.Mode = neuChord.Mode;
                             chordo.Inversion = neuChord.Inversion; 
@@ -809,42 +802,6 @@ namespace music_theory_cycles_001
 
             var mode = ChordTypes.SevenChordModeFormula[chordo.Mode];
 
-            //var fTemp = new int[4];
-            //switch (chordo.Inversion)
-            //{
-            //    case SevenChordInversion.I:
-            //        fTemp[0] = mode[0];
-            //        fTemp[1] = mode[1];
-            //        fTemp[2] = mode[2];
-            //        fTemp[3] = mode[3];
-            //        break;
-            //    case SevenChordInversion.II:
-            //        fTemp[0] = mode[1];
-            //        fTemp[1] = mode[2];
-            //        fTemp[2] = mode[3];
-            //        fTemp[3] = mode[0];
-            //        break;
-            //    case SevenChordInversion.III:
-            //        fTemp[0] = mode[2];
-            //        fTemp[1] = mode[3];
-            //        fTemp[2] = mode[0];
-            //        fTemp[3] = mode[1];
-            //        break;
-            //    case SevenChordInversion.IV:
-            //        fTemp[0] = mode[3];
-            //        fTemp[1] = mode[0];
-            //        fTemp[2] = mode[1];
-            //        fTemp[3] = mode[2];
-            //        break;
-            //    default:
-            //        break;
-            //}
-
-
-            //chordo.ChordNotes[0] = Program.moveNoteBySemitones(chordo.ChordNotes[fTemp[0]], transformation[0]);
-            //chordo.ChordNotes[1] = Program.moveNoteBySemitones(chordo.ChordNotes[fTemp[1]], transformation[1]);
-            //chordo.ChordNotes[2] = Program.moveNoteBySemitones(chordo.ChordNotes[fTemp[2]], transformation[2]);
-            //chordo.ChordNotes[3] = Program.moveNoteBySemitones(chordo.ChordNotes[fTemp[3]], transformation[3]); 
 
             chordo.ChordNotes[0] = Program.moveNoteBySemitones(chordo.ChordNotes[0], transformation[0]);
             chordo.ChordNotes[1] = Program.moveNoteBySemitones(chordo.ChordNotes[1], transformation[1]);
