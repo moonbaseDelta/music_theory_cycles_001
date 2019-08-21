@@ -11,7 +11,5 @@ namespace music_theory_cycles_001
         public int[] Formula { get; set; }
 
         public List<TransformationDetailedInfo> ApplicationsOnVariosChords { get; set; }
-
-
     }
 }
