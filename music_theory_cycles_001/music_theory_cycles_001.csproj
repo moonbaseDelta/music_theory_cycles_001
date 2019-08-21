@@ -61,8 +61,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JustNote.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SevenChord.cs" />
+    <Compile Include="SevenChordTransformation.cs" />
+    <Compile Include="SevenChordTypes.cs" />
+    <Compile Include="TransformationDetailedInfo.cs" />
+    <Compile Include="TransformationWithData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
