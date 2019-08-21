@@ -34,6 +34,11 @@ namespace music_theory_cycles_001
 
     public struct ChordStepsTransition
     {
+        public int TonicMoved;
+        public int ThirdMoved;
+        public int FifthMoved;
+        public int SeventhMoved;
+
         public SevenChordStep TonicInto;
         public SevenChordStep ThirdInto;
         public SevenChordStep FifthInto;
