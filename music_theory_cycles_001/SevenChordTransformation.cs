@@ -65,7 +65,7 @@ namespace music_theory_cycles_001
             try
             {
                 SevenChord.ResetChordRootStepsModeAndInversion(chordo); 
-                if (chordo.ChordNotes.All(cn => cn.unboundOctave > 9 || cn.unboundOctave < 0))
+                if (chordo.ChordNotes.All(cn => cn.unboundOctave > 19 || cn.unboundOctave < -10))
                     return false;
                 else
                     return true;

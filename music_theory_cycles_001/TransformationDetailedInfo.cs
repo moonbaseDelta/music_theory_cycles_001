@@ -5,7 +5,10 @@ namespace music_theory_cycles_001
 {
     public class TransformationDetailedInfo
     {
-        public string InitialChordType { get; set; } 
+        public string InitialChordType { get; set; }
+        public SevenChordMode InitialChordMode { get; set; }
+        public SevenChordInversion InitialChordInversion { get; set; }
+
         public List<string> SameToItselfOnType { get; set; }
         public List<int> SameToItselfOnTypeXonFromStep { get; set; }
 
@@ -43,6 +46,8 @@ namespace music_theory_cycles_001
         public SevenChordStep ThirdInto;
         public SevenChordStep FifthInto;
         public SevenChordStep SeventhInto; 
+
+        public int SizeDifference;
     }
 
     public enum SevenChordStep

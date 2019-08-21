@@ -126,78 +126,186 @@ namespace music_theory_cycles_001
             //Console.WriteLine(ch3); 
             //Console.WriteLine(SevenChord.DetermineChordType(ch3));
 
-            foreach (var chordtype in SevenChordTypes.SevenchordTypes.Keys)
-            { 
-                var infos = new List<SimpleTransformationInfo>();
-                foreach (var item in Transformations)
-                {
-                    var testChord = new SevenChord(JustNote.getNoteFromNumber(48), SevenChordTypes.GetChordFormula(chordtype));
+            List<TransformationWithData> TransData = new List<TransformationWithData>();
+            foreach (var item in Transformations)
+            {
+                var a = new TransformationWithData();
+                a.Formula = item;
+                a.ApplicationsOnVariosChords = new List<TransformationDetailedInfo>();
 
-                    var typeOfChord = testChord.ChordType;
-                    var typeOfChord2 = testChord.ChordType;
+                foreach (var chordtype in SevenChordTypes.SevenchordTypes.Keys) 
+                    foreach (SevenChordMode mode in (SevenChordMode[])Enum.GetValues(typeof(SevenChordMode))) 
+                        foreach (SevenChordInversion inv in (SevenChordInversion[])Enum.GetValues(typeof(SevenChordInversion)))
+                        { 
+                            var b = new TransformationDetailedInfo();
 
-                    var modeOfChord = testChord.Mode;
-                    var modeOfChord2 = testChord.Mode;
+                            b.InitialChordType = chordtype;
+                            b.InitialChordMode = mode;
+                            b.InitialChordInversion = inv;
 
-                    var invOfChord = testChord.Inversion;
-                    var invOfChord2 = testChord.Inversion;
+                            var testChord = new SevenChord(JustNote.getNoteFromNumber(48), SevenChordTypes.GetChordFormula(chordtype), mode, inv);
 
+                            b.TheApplications = new List<SevenChordSignature>();
+                            b.TheStepsTransitions = new List<ChordStepsTransition>();
 
-                    int typeRepTwice = 0;
-                    int cycleCount = 0;
-                    if (item[0] == 0 && item[1] == 0 && item[2] == 0 && item[3] == -2)
-                    {
-                        // Console.WriteLine(testChord);
-                        // Console.WriteLine(SevenChord.DetermineChordType(testChord));
-                    }
+                            var bb = new SevenChordSignature();
+                            bb.ChordType = testChord.ChordType;
+                            bb.Mode = testChord.Mode;
+                            bb.Inversion = testChord.Inversion;
+                            b.TheApplications.Add(bb);
 
-                    while (SevenChordTransformation.ApplyATransformation(testChord, new int[] { item[0], item[1], item[2], item[3] }))
-                    {
-                        typeOfChord2 = testChord.ChordType;
-                        modeOfChord2 = testChord.Mode;
-                        invOfChord2 = testChord.Inversion;
+                            var prevNotes = new JustNote[4];
+                            for (int i = 0; i < 4; i++)
+                                prevNotes[i] = testChord.ChordNotes[i];
 
+                            var prevSize = testChord.GetChordSize();
 
-                        if (typeOfChord2 == typeOfChord && modeOfChord2 == modeOfChord && invOfChord2 == invOfChord) typeRepTwice++;
-                        if (typeRepTwice == 2)
-                            break;
+                            int stepsTaken = 0;
+                            while (SevenChordTransformation.ApplyATransformation(testChord, a.Formula))
+                            {
+                                var bbb = new SevenChordSignature();
+                                bbb.ChordType = testChord.ChordType;
+                                bbb.Mode = testChord.Mode;
+                                bbb.Inversion = testChord.Inversion;
+                                b.TheApplications.Add(bbb);
 
-                        if (item[0] == 0 && item[1] == 0 && item[2] == 0 && item[3] == -2)
-                        {
-                            // Console.WriteLine(testChord);
-                            // Console.WriteLine(SevenChord.DetermineChordType(testChord));
+                                var bbc = new ChordStepsTransition();
+                                bbc.TonicMoved = testChord.ChordNotes[0].getNoteNumber() - prevNotes[0].getNoteNumber();
+                                bbc.ThirdMoved = testChord.ChordNotes[1].getNoteNumber() - prevNotes[1].getNoteNumber();
+                                bbc.FifthMoved = testChord.ChordNotes[2].getNoteNumber() - prevNotes[2].getNoteNumber();
+                                bbc.SeventhMoved = testChord.ChordNotes[3].getNoteNumber() - prevNotes[3].getNoteNumber();
+
+                                for (int i = 0; i < 4; i++)
+                                    prevNotes[i] = JustNote.moveNoteBySemitones(prevNotes[i], a.Formula[i]);
+
+                                if (prevNotes[0].getNoteNumber() == testChord.ChordNotes[0].getNoteNumber())
+                                    bbc.TonicInto = SevenChordStep.T;
+                                else if (prevNotes[0].getNoteNumber() == testChord.ChordNotes[1].getNoteNumber())
+                                    bbc.TonicInto = SevenChordStep.III;
+                                else if (prevNotes[0].getNoteNumber() == testChord.ChordNotes[2].getNoteNumber())
+                                    bbc.TonicInto = SevenChordStep.V;
+                                else if (prevNotes[0].getNoteNumber() == testChord.ChordNotes[3].getNoteNumber())
+                                    bbc.TonicInto = SevenChordStep.VII;
+
+                                if (prevNotes[1].getNoteNumber() == testChord.ChordNotes[0].getNoteNumber())
+                                    bbc.ThirdInto = SevenChordStep.T;
+                                else if (prevNotes[1].getNoteNumber() == testChord.ChordNotes[1].getNoteNumber())
+                                    bbc.ThirdInto = SevenChordStep.III;
+                                else if (prevNotes[1].getNoteNumber() == testChord.ChordNotes[2].getNoteNumber())
+                                    bbc.ThirdInto = SevenChordStep.V;
+                                else if (prevNotes[1].getNoteNumber() == testChord.ChordNotes[3].getNoteNumber())
+                                    bbc.ThirdInto = SevenChordStep.VII;
+
+                                if (prevNotes[2].getNoteNumber() == testChord.ChordNotes[0].getNoteNumber())
+                                    bbc.FifthInto = SevenChordStep.T;
+                                else if (prevNotes[2].getNoteNumber() == testChord.ChordNotes[1].getNoteNumber())
+                                    bbc.FifthInto = SevenChordStep.III;
+                                else if (prevNotes[2].getNoteNumber() == testChord.ChordNotes[2].getNoteNumber())
+                                    bbc.FifthInto = SevenChordStep.V;
+                                else if (prevNotes[2].getNoteNumber() == testChord.ChordNotes[3].getNoteNumber())
+                                    bbc.FifthInto = SevenChordStep.VII;
+
+                                if (prevNotes[3].getNoteNumber() == testChord.ChordNotes[0].getNoteNumber())
+                                    bbc.SeventhInto = SevenChordStep.T;
+                                else if (prevNotes[3].getNoteNumber() == testChord.ChordNotes[1].getNoteNumber())
+                                    bbc.SeventhInto = SevenChordStep.III;
+                                else if (prevNotes[3].getNoteNumber() == testChord.ChordNotes[2].getNoteNumber())
+                                    bbc.SeventhInto = SevenChordStep.V;
+                                else if (prevNotes[3].getNoteNumber() == testChord.ChordNotes[3].getNoteNumber())
+                                    bbc.SeventhInto = SevenChordStep.VII;
+
+                                bbc.SizeDifference = testChord.GetChordSize() - prevSize;
+
+                                b.TheStepsTransitions.Add(bbc);
+
+                                for (int i = 0; i < 4; i++)
+                                    prevNotes[i] = testChord.ChordNotes[i];
+
+                                stepsTaken++;
+
+                                if (stepsTaken > 300) 
+                                    break; 
+                            }
+                            a.ApplicationsOnVariosChords.Add(b);
                         }
-                        // Console.WriteLine(ch3);
-                        //Console.WriteLine(SevenChord.DetermineChordType(ch3));
-                        cycleCount++;
-
-                        if (cycleCount > 100)
-                            break;
-                    }
-
-                    if (typeRepTwice == 2)
-                    {
-                        var ku = new SimpleTransformationInfo();
-                        ku.count = cycleCount / 2 + 1;
-                        ku.mess = "The cycle [" + item[0] + "  " + item[1] + "  " + item[2] + "  " + item[3] + "] looped on " + (cycleCount / 2 + 1) + " turn.";
-
-                        infos.Add(ku);
-                        //Console.WriteLine("The cycle [" + item[0] + "  " + item[1] + "  " + item[2] + "  " + item[3] + "] looped on " + (cycleCount / 2 + 1) + " turn.");
-                    }
-                    else
-                    {
-                        //    if (cycleCount < 10 && cycleCount > 0)
-                        //        Console.WriteLine("The cycle [" + item[0] + "  " + item[1] + "  " + item[2] + "  " + item[3] + "] crashed on " + cycleCount + " turn."); 
-                    }
-                }
-
-
-                infos.Sort(delegate (SimpleTransformationInfo ti1, SimpleTransformationInfo ti2) { return ti1.count.CompareTo(ti2.count); });
-
-                var ninfos = infos.GroupBy(iii => iii.count).ToList();
-                Console.WriteLine(chordtype + " loops by steps: ");
-                ninfos.ForEach(niii => Console.WriteLine(niii.Key + ": " + niii.Count()));
+                TransData.Add(a);
+                Console.WriteLine(TransData.Count);
             }
+
+
+
+            //foreach (var chordtype in SevenChordTypes.SevenchordTypes.Keys)
+            //{  
+            //    var infos = new List<SimpleTransformationInfo>();
+            //    foreach (var item in Transformations)
+            //    {
+            //        var testChord = new SevenChord(JustNote.getNoteFromNumber(48), SevenChordTypes.GetChordFormula(chordtype));
+
+            //        var typeOfChord = testChord.ChordType;
+            //        var typeOfChord2 = testChord.ChordType;
+
+            //        var modeOfChord = testChord.Mode;
+            //        var modeOfChord2 = testChord.Mode;
+
+            //        var invOfChord = testChord.Inversion;
+            //        var invOfChord2 = testChord.Inversion;
+
+
+            //        int typeRepTwice = 0;
+            //        int cycleCount = 0;
+            //        if (item[0] == 0 && item[1] == 0 && item[2] == 0 && item[3] == -2)
+            //        {
+            //            // Console.WriteLine(testChord);
+            //            // Console.WriteLine(SevenChord.DetermineChordType(testChord));
+            //        }
+
+            //        while (SevenChordTransformation.ApplyATransformation(testChord, new int[] { item[0], item[1], item[2], item[3] }))
+            //        {
+            //            typeOfChord2 = testChord.ChordType;
+            //            modeOfChord2 = testChord.Mode;
+            //            invOfChord2 = testChord.Inversion;
+
+
+            //            if (typeOfChord2 == typeOfChord && modeOfChord2 == modeOfChord && invOfChord2 == invOfChord) typeRepTwice++;
+            //            if (typeRepTwice == 2)
+            //                break;
+
+            //            if (item[0] == 0 && item[1] == 0 && item[2] == 0 && item[3] == -2)
+            //            {
+            //                // Console.WriteLine(testChord);
+            //                // Console.WriteLine(SevenChord.DetermineChordType(testChord));
+            //            }
+            //            // Console.WriteLine(ch3);
+            //            //Console.WriteLine(SevenChord.DetermineChordType(ch3));
+            //            cycleCount++;
+
+            //            if (cycleCount > 100)
+            //                break;
+            //        }
+
+            //        if (typeRepTwice == 2)
+            //        {
+            //            var ku = new SimpleTransformationInfo();
+            //            ku.count = cycleCount / 2 + 1;
+            //            ku.mess = "The cycle [" + item[0] + "  " + item[1] + "  " + item[2] + "  " + item[3] + "] looped on " + (cycleCount / 2 + 1) + " turn.";
+
+            //            infos.Add(ku);
+            //            //Console.WriteLine("The cycle [" + item[0] + "  " + item[1] + "  " + item[2] + "  " + item[3] + "] looped on " + (cycleCount / 2 + 1) + " turn.");
+            //        }
+            //        else
+            //        {
+            //            //    if (cycleCount < 10 && cycleCount > 0)
+            //            //        Console.WriteLine("The cycle [" + item[0] + "  " + item[1] + "  " + item[2] + "  " + item[3] + "] crashed on " + cycleCount + " turn."); 
+            //        }
+            //    } 
+            //    infos.Sort(delegate (SimpleTransformationInfo ti1, SimpleTransformationInfo ti2) { return ti1.count.CompareTo(ti2.count); });
+
+            //    var ninfos = infos.GroupBy(iii => iii.count).ToList();
+            //    Console.WriteLine(chordtype + " loops by steps: ");
+            //    ninfos.ForEach(niii => Console.WriteLine(niii.Key + ": " + niii.Count()));
+            //}
+
+            int cycleCount2222 = 0;
 
             //int cycleCount = 0;
             //while (ChordTransformation.ApplyATransformation(ch3, new int[] { 0,  1,  -4 , 0 }))
