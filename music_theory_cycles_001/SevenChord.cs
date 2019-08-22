@@ -204,14 +204,8 @@ namespace music_theory_cycles_001
             for (int n = 0; n < 4; n++)
                 for (int m = 0; m < 6; m++)
                     for (int i = 0; i < 4; i++)
-                    {
-                        if (n == 1 && m == 5)
-                        {
-                            int k = 0;
-                        }
-
-                        var neuChord = new SevenChord(chordo.ChordNotes[n], GetChordFormula(chordo.ChordType), (SevenChordMode)m, (SevenChordInversion)i);
-
+                    { 
+                        var neuChord = new SevenChord(chordo.ChordNotes[n], GetChordFormula(chordo.ChordType), (SevenChordMode)m, (SevenChordInversion)i); 
 
                         var notesNeu = neuChord.ChordNotes.OrderBy(n2 => n2.getNoteNumber()).ToArray().Select(nn => nn.nameOfTheNote).ToList();
                         var notesOrig = chordo.ChordNotes.OrderBy(n2 => n2.getNoteNumber()).ToArray().Select(nn => nn.nameOfTheNote).ToList();

@@ -14,13 +14,14 @@ namespace music_theory_cycles_001
 
         public bool Cyclic { get; set; } 
 
-        public int CrashedDistance { get; set; }
+        //public int CrashedDistance { get; set; }
 
         public int LoopByTypeDistance { get; set; }
         public int FullLoopDistance { get; set; } 
 
         public bool MovingDown { get; set; }
-        public bool MovingUp { get; set; } 
+        public bool MovingUp { get; set; }
+        public bool StayInPlace { get; set; }
 
         public bool SizeKept { get; set; }
 

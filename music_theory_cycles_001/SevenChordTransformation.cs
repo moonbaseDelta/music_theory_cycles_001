@@ -48,15 +48,15 @@ namespace music_theory_cycles_001
             return aTransformation;
         }
 
-        public static bool ApplyATransformation(SevenChord chordo, int[] transformation)
+        public static bool ApplyATransformation(SevenChord chordo, int[] transformation, int transpose = 0)
         { 
             chordo.ChordType = SevenChord.DetermineChordType(chordo); 
             var mode = SevenChordTypes.SevenChordModeFormula[chordo.Mode]; 
 
-            chordo.ChordNotes[0] = JustNote.moveNoteBySemitones(chordo.ChordNotes[0], transformation[0]);
-            chordo.ChordNotes[1] = JustNote.moveNoteBySemitones(chordo.ChordNotes[1], transformation[1]);
-            chordo.ChordNotes[2] = JustNote.moveNoteBySemitones(chordo.ChordNotes[2], transformation[2]);
-            chordo.ChordNotes[3] = JustNote.moveNoteBySemitones(chordo.ChordNotes[3], transformation[3]); 
+            chordo.ChordNotes[0] = JustNote.moveNoteBySemitones(chordo.ChordNotes[0], transformation[0] + transpose);
+            chordo.ChordNotes[1] = JustNote.moveNoteBySemitones(chordo.ChordNotes[1], transformation[1] + transpose);
+            chordo.ChordNotes[2] = JustNote.moveNoteBySemitones(chordo.ChordNotes[2], transformation[2] + transpose);
+            chordo.ChordNotes[3] = JustNote.moveNoteBySemitones(chordo.ChordNotes[3], transformation[3] + transpose); 
 
             chordo.ChordType = SevenChord.DetermineChordType(chordo);
             if (chordo.ChordType == "undefined")

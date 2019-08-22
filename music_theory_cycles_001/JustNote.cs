@@ -37,13 +37,15 @@ namespace music_theory_cycles_001
 
         public static JustNote getNoteFromNumber(int number)
         {
-            if (number / 12 >= 0 && number / 12 <= 8)
+            int oct = number / 12;
+            int rem = number % 12;
+            if (oct >= 0 && oct <= 8)
             {
-                return new JustNote((NoteName)(number % 12), (Octave)(number / 12), (number / 12));
+                return new JustNote((NoteName)(rem), (Octave)(oct), oct);
             }
             else
             {
-                return new JustNote((NoteName)(number % 12), Octave.OUTOFNORMALPIANO, (number / 12));
+                return new JustNote((NoteName)(rem), Octave.OUTOFNORMALPIANO, oct);
                 //return null;
             }
         }
