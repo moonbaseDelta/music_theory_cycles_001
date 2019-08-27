@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NFugue.Patterns;
+using NFugue.Playing;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -211,6 +213,90 @@ namespace music_theory_cycles_001
              
 
               kasdf = 1;
+            var rand = new Random();
+            //var goodone = TransData[rand.Next(TransData.Count)]; 
+            //foreach (var item in goodone.ApplicationsOnVariosChords)
+            //{
+
+            //    //var testChord = new SevenChord(JustNote.getNoteFromNumber(48), 
+            //    //    SevenChordTypes.GetChordFormula(item.InitialChordType), 
+            //    //    item.InitialChordMode, item.InitialChordInversion);
+
+            //    for (int i = 0; i < item.FullLoopDistance; i++)
+            //    {
+
+            //       // Console.WriteLine("After :: " + " [" + goodone.Formula[0] + "  " + goodone.Formula[1] + "  " + goodone.Formula[2] + "  " + goodone.Formula[3] + "] ");
+            //       // Console.WriteLine(testChord.ToString());
+
+            //        //using (var player = new Player())
+            //        //{
+            //        //    Pattern p1 = new Pattern($"T140 V0 I[Piano] {testChord.ChordNotes[0].GetNFugueName()}w ");
+            //        //    Pattern p2 = new Pattern($"T140 V1 I[Flute] {testChord.ChordNotes[1].GetNFugueName()}w ");
+            //        //    Pattern p3 = new Pattern($"T140 V2 I[Flute] {testChord.ChordNotes[2].GetNFugueName()}w ");
+            //        //    Pattern p4 = new Pattern($"T140 V3 I[Flute] {testChord.ChordNotes[3].GetNFugueName()}w ");
+
+            //        //    //player.Play(p1, p2, p3, p4);
+            //        //}
+            //        int k1111 = 0;
+            //        //SevenChordTransformation.ApplyATransformation(testChord, goodone.Formula); 
+            //    }
+            //}
+             
+
+            playsmthn();
+            for (int i = 0; i < 5; i++)
+            {
+                playsmthn();
+            }
+
+            kasdf = 1;
+
+            void playsmthn()
+            {
+                var goodone = TransData[rand.Next(TransData.Count)];
+
+                var interestings = goodone.ApplicationsOnVariosChords; //.Where(tt => tt.StayInPlace == true).ToList();
+
+                if (interestings.Count() == 0)
+                    return;
+
+                var item = interestings[rand.Next(interestings.Count)];
+                 
+                    var testChord = new SevenChord(JustNote.getNoteFromNumber(48),
+                        SevenChordTypes.GetChordFormula(item.InitialChordType),
+                        item.InitialChordMode, item.InitialChordInversion);
+
+                    using (var player = new Player())
+                    {
+                        Pattern p1 = new Pattern($"T100 V0 I[Piano] {testChord.ChordNotes[0].GetNFugueName()}q ");
+                        Pattern p2 = new Pattern($"T100 V1 I[Flute] {testChord.ChordNotes[1].GetNFugueName()}q ");
+                        Pattern p3 = new Pattern($"T100 V2 I[Flute] {testChord.ChordNotes[2].GetNFugueName()}q ");
+                        Pattern p4 = new Pattern($"T100 V3 I[Flute] {testChord.ChordNotes[3].GetNFugueName()}q ");
+
+                        player.Play(p1, p2, p3, p4);
+                    }
+
+                for (int i = 0; i < item.FullLoopDistance * 2; i++)
+                    {
+                        Console.WriteLine("After :: " + " [" + goodone.Formula[0] + "  " + goodone.Formula[1] + "  " + goodone.Formula[2] + "  " + goodone.Formula[3] + "] ");
+                        Console.WriteLine(testChord.ToString());
+
+                        using (var player = new Player())
+                        {
+                            Pattern p1 = new Pattern($"T140 V0 I[Piano] {testChord.ChordNotes[0].GetNFugueName()}w ");
+                            Pattern p2 = new Pattern($"T140 V1 I[Flute] {testChord.ChordNotes[1].GetNFugueName()}w ");
+                            Pattern p3 = new Pattern($"T140 V2 I[Flute] {testChord.ChordNotes[2].GetNFugueName()}w ");
+                            Pattern p4 = new Pattern($"T140 V3 I[Flute] {testChord.ChordNotes[3].GetNFugueName()}w ");
+                         int k21111 = 0;
+                         player.Play(p1, p2, p3, p4);
+                        }
+                        int k1111 = 0;
+                        SevenChordTransformation.ApplyATransformation(testChord, goodone.Formula); 
+                    } 
+
+            }
+
+
             //foreach (var chordtype in SevenChordTypes.SevenchordTypes.Keys)
             //{  
             //    var infos = new List<SimpleTransformationInfo>();

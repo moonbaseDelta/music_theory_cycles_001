@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System; 
+using System.Linq; 
 
 namespace music_theory_cycles_001
 {
@@ -60,7 +57,7 @@ namespace music_theory_cycles_001
 
             chordo.ChordType = SevenChord.DetermineChordType(chordo);
             if (chordo.ChordType == "undefined")
-                return false;
+                return false; 
 
             try
             {

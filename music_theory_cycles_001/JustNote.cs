@@ -55,6 +55,55 @@ namespace music_theory_cycles_001
             return getNoteFromNumber(note.getNoteNumber() + number);
         }
 
+        public string GetNFugueName()
+        {
+            string res = "";
+
+            switch (nameOfTheNote)
+            {
+                case NoteName.C:
+                    res = "C";
+                    break;
+                case NoteName.CsDb:
+                    res = "C#";
+                    break;
+                case NoteName.D:
+                    res = "D";
+                    break;
+                case NoteName.DsEb:
+                    res = "D#";
+                    break;
+                case NoteName.E:
+                    res = "E";
+                    break;
+                case NoteName.F:
+                    res = "F";
+                    break;
+                case NoteName.FsGb:
+                    res = "F#";
+                    break;
+                case NoteName.G:
+                    res = "G";
+                    break;
+                case NoteName.GsAb:
+                    res = "G#";
+                    break;
+                case NoteName.A:
+                    res = "A";
+                    break;
+                case NoteName.AsBb:
+                    res = "A#";
+                    break;
+                case NoteName.B:
+                    res = "B";
+                    break;
+                default:
+                    break;
+            }
+
+            return res + unboundOctave.ToString();
+        } 
+
     } 
 
     public enum NoteName
