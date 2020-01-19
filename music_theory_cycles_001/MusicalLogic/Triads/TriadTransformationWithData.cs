@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace music_theory_cycles_001
-{
-    public class TransformationWithData
+{ 
+    public class TriadTransformationWithData
     {
         public int[] Formula { get; set; }
 
-        public List<TransformationDetailedInfo> ApplicationsOnVariosChords { get; set; }
+        public List<TriadTransformationWithDetailedInfo> ApplicationsOnVariosTriads { get; set; }
     }
 }

@@ -58,22 +58,24 @@ namespace music_theory_cycles_001
 
         static public Dictionary<string, int[]> SevenchordTypes = new Dictionary<string, int[]>()
         {
-            { "Δ",  new int[] { 4, 3, 4, 1 } },
-            { "Δ+",  new int[] { 4, 4, 3, 1 } },
-            { "Δ-",  new int[] { 4, 2, 5, 1 } },
-            { "m7",  new int[] { 3, 4, 3, 2 } },
-            { "m7+",  new int[] { 3, 5, 2, 2 } },
-            { "Ø",  new int[] { 3, 3, 4, 2 } },
-            { "7",  new int[] { 4, 3, 3, 2 } },
-            { "7+",  new int[] { 4, 4, 2, 2 } },
-            { "7-",  new int[] { 4, 2, 4, 2 } },
-            { "mΔ7",  new int[] { 3, 4, 4, 1 } },
-            { "mΔ7+",  new int[] { 3, 4, 3, 1 } },
-            { "mΔ7-",  new int[] { 3, 3, 5, 1 } },
-            { "⃝",  new int[] { 3, 3, 3, 3 } },
+            { "Δ",      new int[] { 4, 3, 4, 1 } },
+            { "Δ+",     new int[] { 4, 4, 3, 1 } },
+            { "Δ-",     new int[] { 4, 2, 5, 1 } },
+            { "m7",     new int[] { 3, 4, 3, 2 } },
+            { "m7+",    new int[] { 3, 5, 2, 2 } },
+            { "Ø",      new int[] { 3, 3, 4, 2 } },
+            { "7",      new int[] { 4, 3, 3, 2 } },
+            { "7+",     new int[] { 4, 4, 2, 2 } },
+            { "7-",     new int[] { 4, 2, 4, 2 } },
+            { "mΔ7",    new int[] { 3, 4, 4, 1 } },
+            { "mΔ7+",   new int[] { 3, 4, 3, 1 } },
+            { "mΔ7-",   new int[] { 3, 3, 5, 1 } },
+            { "⃝",      new int[] { 3, 3, 3, 3 } },
         };
 
-
+        /// <summary>
+        /// A map describing the relation between a chord-Mode and the base order of chord steps. The base case: modeI I-III-V-VII
+        /// </summary>
         static public Dictionary<SevenChordMode, int[]> SevenChordModeFormula = new Dictionary<SevenChordMode, int[]>()
         {
             {   SevenChordMode.I,     new int[] {0,1,2,3}    },
@@ -93,7 +95,7 @@ namespace music_theory_cycles_001
             IV,
             V,
             VI
-        }
+        } 
 
         public enum SevenChordInversion
         {
@@ -102,7 +104,5 @@ namespace music_theory_cycles_001
             III,
             IV
         }
-    }
-
-
+    } 
 }

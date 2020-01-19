@@ -3,7 +3,7 @@ using static music_theory_cycles_001.SevenChordTypes;
 
 namespace music_theory_cycles_001
 {
-    public class TransformationDetailedInfo
+    public class SevenChordTransformationDetailedInfo
     {
         public string InitialChordType { get; set; }
         public SevenChordMode InitialChordMode { get; set; }

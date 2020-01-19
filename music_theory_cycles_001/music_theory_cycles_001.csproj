@@ -70,19 +70,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalculateAllTransformations.cs" />
-    <Compile Include="JustNote.cs" />
+    <Compile Include="MusicalLogic\CalculateAllTransformations.cs" />
+    <Compile Include="MusicalLogic\JustNote.cs" />
+    <Compile Include="MusicalLogic\Triads\Triad.cs" />
+    <Compile Include="MusicalLogic\Triads\TriadTransformation.cs" />
+    <Compile Include="MusicalLogic\Triads\TriadTransformationWithData.cs" />
+    <Compile Include="MusicalLogic\Triads\TriadTransformationWithDetailedInfo.cs" />
+    <Compile Include="MusicalLogic\Triads\TriadTypes.cs" />
+    <Compile Include="Utils.cs" />
+    <Compile Include="NFugueUsage\NFugueUsage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SevenChord.cs" />
-    <Compile Include="SevenChordTransformation.cs" />
-    <Compile Include="SevenChordTypes.cs" />
-    <Compile Include="TransformationDetailedInfo.cs" />
-    <Compile Include="TransformationWithData.cs" />
+    <Compile Include="MusicalLogic\SevenChords\SevenChord.cs" />
+    <Compile Include="MusicalLogic\SevenChords\SevenChordTransformation.cs" />
+    <Compile Include="MusicalLogic\SevenChords\SevenChordTypes.cs" />
+    <Compile Include="MusicalLogic\SevenChords\SevenChordTransformationDetailedInfo.cs" />
+    <Compile Include="MusicalLogic\SevenChords\SevenChordTransformationWithData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DBLogic\" />
+    <Folder Include="MusicalLogic\Scales\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -143,8 +143,7 @@ namespace music_theory_cycles_001
             int sInterval = notes.ElementAt(2).getNoteNumber() - notes.ElementAt(1).getNoteNumber();
             int tInterval = notes.ElementAt(3).getNoteNumber() - notes.ElementAt(2).getNoteNumber();
 
-            return fInterval + " " + sInterval + " " + tInterval;
-
+            return fInterval + " " + sInterval + " " + tInterval; 
         }
 
         static public string DetermineChordType(SevenChord chordo)
@@ -168,8 +167,7 @@ namespace music_theory_cycles_001
                     notes[3] = JustNote.moveNoteBySemitones(notes[3], -12);
                     notes = notes.OrderBy(n => n.getNoteNumber()).ToArray();
 
-                    size = notes.Last().getNoteNumber() - notes.First().getNoteNumber();
-                    int k = 0;
+                    size = notes.Last().getNoteNumber() - notes.First().getNoteNumber(); 
                 }
             }
 

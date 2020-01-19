@@ -14,43 +14,54 @@ namespace music_theory_cycles_001
     {
         static void Main(string[] args)
         {
+            Utils.FairRandom = new Random();
+
             // Neeeded 'cause of symbols used to name chords
             // Without it works fine, but prints '?' all around
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-               
 
-            var neg = new List<SevenChord>(); 
-            int countChordos = 0;
-            foreach (var item in SevenChordTypes.SevenchordTypes) 
-                for (int i = 0; i < 6; i++) 
-                    for (int ii = 0; ii < 4; ii++)
-                    {
-                        var chordo = new SevenChord(JustNote.getNoteFromNumber(36), item.Value);
-                        chordo.Mode = (SevenChordMode)i;
-                        chordo.InverseForward((SevenChordInversion)ii);
-                        //Console.WriteLine(chordo);
-                        countChordos++;
-                        neg.Add(chordo);
-                    } 
 
-            var Transformations = new List<int[]>();
-            foreach (var chord1 in neg) 
-                foreach (var chord2 in neg)
-                {
-                    Transformations.Add(SevenChordTransformation.GetATransformation(chord1, chord2));
-                } 
+            /* TRIADS TESTING */
+            var triads = CalculateAllTransformations.GetAllPossibleTriads();
+            int countTriads = triads.Count;
 
-            int t2c = Transformations.Count;
-            Transformations = Transformations.Distinct(new IntArrayComparer()).ToList();
-            Transformations = Transformations.OrderBy((tr2) => tr2[1]).ThenBy((tr2) => tr2[2]).ThenBy((tr3) => tr3[3]).ToList();
-            ////Transformations.Sort(delegate (int[] tr1, int[] tr2) { return tr1[1].CompareTo(tr2[1]); });
-            //Transformations.Sort(delegate (int[] tr1, int[] tr2) { return tr1[2].CompareTo(tr2[2]); });
-            ////Transformations.Sort(delegate (int[] tr1, int[] tr2) { return tr1[3].CompareTo(tr2[3]); });
-            //foreach (var item in Transformations)
-            //{
-            //    Console.WriteLine(" \t" + item[0] + "  " + item[1] + "  " + item[2] + "  " + item[3]);
-            //}
-            Console.WriteLine("\n\t" + t2c + " -> " + Transformations.Count);
+            var TriadsTransformations = CalculateAllTransformations.GetRawListOfAcceptableTransormations(triads);
+
+            int initialTriadsTransormationsFound = TriadsTransformations.Count;
+            TriadsTransformations = CalculateAllTransformations.SortAndDistintTheTransformations(TriadsTransformations);
+
+            Console.WriteLine("\nTriads transformations ::: " + initialTriadsTransormationsFound + " -> " + TriadsTransformations.Count); 
+
+            triads.Sort(delegate (Triad tr1, Triad tr2) { return tr1.GetChordSize().CompareTo(tr2.GetChordSize()); });
+
+            Console.WriteLine();
+            Console.WriteLine("Total triads variations count is: " + countTriads);
+            Console.WriteLine();
+
+
+            var TriadsTransData = CalculateAllTransformations.CalculateTransDataForTriads(TriadsTransformations);
+
+            int triadsMaxDistance = 0;
+            triadsMaxDistance = TriadsTransData.Max(t => t.ApplicationsOnVariosTriads.Max(tt => tt.FullLoopDistance));
+
+
+            var stopme  = 1;
+            NFugueUsage.playsomeTriads(TriadsTransData, 5); 
+
+
+            stopme = 1;
+
+
+            /* SEVEN CHORDS TESTING */
+            var neg = CalculateAllTransformations.GetAllPossibleSevenChords(); 
+            int countChordos = neg.Count;  
+
+            var Transformations = CalculateAllTransformations.GetRawListOfAcceptableTransormations(neg); 
+
+            int initialTransormationsFound = Transformations.Count; 
+            Transformations = CalculateAllTransformations.SortAndDistintTheTransformations(Transformations);
+
+            Console.WriteLine("\nSevenChords transformations ::: " + initialTransormationsFound + " -> " + Transformations.Count);
 
 
             neg.Sort(delegate (SevenChord ch1, SevenChord ch22) { return ch1.GetChordSize().CompareTo(ch22.GetChordSize()); });
@@ -59,154 +70,13 @@ namespace music_theory_cycles_001
             Console.WriteLine("Total chords variations count is: " + countChordos);
             Console.WriteLine();
 
+
+
             int counttt = 0;
-            List<TransformationWithData> TransData = new List<TransformationWithData>();
-            foreach (var item in Transformations)
-            {
-                var a = new TransformationWithData();
-                a.Formula = item;
-                a.ApplicationsOnVariosChords = new List<TransformationDetailedInfo>();
-
-                foreach (var chordtype in SevenChordTypes.SevenchordTypes.Keys) 
-                    foreach (SevenChordMode mode in (SevenChordMode[])Enum.GetValues(typeof(SevenChordMode))) 
-                        foreach (SevenChordInversion inv in (SevenChordInversion[])Enum.GetValues(typeof(SevenChordInversion)))
-                        { 
-                            var b = new TransformationDetailedInfo();
-
-                            b.InitialChordType = chordtype;
-                            b.InitialChordMode = mode;
-                            b.InitialChordInversion = inv;
-
-                            var testChord = new SevenChord(JustNote.getNoteFromNumber(48), SevenChordTypes.GetChordFormula(chordtype), mode, inv);
-
-                            b.TheApplications = new List<SevenChordSignature>();
-                            b.TheStepsTransitions = new List<ChordStepsTransition>();
-
-                            var bb = new SevenChordSignature();
-                            bb.ChordType = testChord.ChordType;
-                            bb.Mode = testChord.Mode;
-                            bb.Inversion = testChord.Inversion;
-                            b.TheApplications.Add(bb);
-
-                            var prevNotes = new JustNote[4];
-                            for (int i = 0; i < 4; i++)
-                                prevNotes[i] = testChord.ChordNotes[i];
-
-                            var prevSize = testChord.GetChordSize();
-                            var origSize = testChord.GetChordSize();
-
-                            int simpleLoopFound = 0;
-                            int fullLoopFound = 0;
-
-                            int stepsTaken = 0;
-                            while (SevenChordTransformation.ApplyATransformation(testChord, a.Formula) && !b.Cyclic)
-                            {
-                                var bbb = new SevenChordSignature();
-                                bbb.ChordType = testChord.ChordType;
-                                bbb.Mode = testChord.Mode;
-                                bbb.Inversion = testChord.Inversion;
-                                b.TheApplications.Add(bbb);
-
-                                var bbc = new ChordStepsTransition();
-                                bbc.TonicMoved = testChord.ChordNotes[0].getNoteNumber() - prevNotes[0].getNoteNumber();
-                                bbc.ThirdMoved = testChord.ChordNotes[1].getNoteNumber() - prevNotes[1].getNoteNumber();
-                                bbc.FifthMoved = testChord.ChordNotes[2].getNoteNumber() - prevNotes[2].getNoteNumber();
-                                bbc.SeventhMoved = testChord.ChordNotes[3].getNoteNumber() - prevNotes[3].getNoteNumber();
-
-                                for (int i = 0; i < 4; i++)
-                                    prevNotes[i] = JustNote.moveNoteBySemitones(prevNotes[i], a.Formula[i]);
-
-                                if (prevNotes[0].getNoteNumber() == testChord.ChordNotes[0].getNoteNumber())
-                                    bbc.TonicInto = SevenChordStep.T;
-                                else if (prevNotes[0].getNoteNumber() == testChord.ChordNotes[1].getNoteNumber())
-                                    bbc.TonicInto = SevenChordStep.III;
-                                else if (prevNotes[0].getNoteNumber() == testChord.ChordNotes[2].getNoteNumber())
-                                    bbc.TonicInto = SevenChordStep.V;
-                                else if (prevNotes[0].getNoteNumber() == testChord.ChordNotes[3].getNoteNumber())
-                                    bbc.TonicInto = SevenChordStep.VII;
-
-                                if (prevNotes[1].getNoteNumber() == testChord.ChordNotes[0].getNoteNumber())
-                                    bbc.ThirdInto = SevenChordStep.T;
-                                else if (prevNotes[1].getNoteNumber() == testChord.ChordNotes[1].getNoteNumber())
-                                    bbc.ThirdInto = SevenChordStep.III;
-                                else if (prevNotes[1].getNoteNumber() == testChord.ChordNotes[2].getNoteNumber())
-                                    bbc.ThirdInto = SevenChordStep.V;
-                                else if (prevNotes[1].getNoteNumber() == testChord.ChordNotes[3].getNoteNumber())
-                                    bbc.ThirdInto = SevenChordStep.VII;
-
-                                if (prevNotes[2].getNoteNumber() == testChord.ChordNotes[0].getNoteNumber())
-                                    bbc.FifthInto = SevenChordStep.T;
-                                else if (prevNotes[2].getNoteNumber() == testChord.ChordNotes[1].getNoteNumber())
-                                    bbc.FifthInto = SevenChordStep.III;
-                                else if (prevNotes[2].getNoteNumber() == testChord.ChordNotes[2].getNoteNumber())
-                                    bbc.FifthInto = SevenChordStep.V;
-                                else if (prevNotes[2].getNoteNumber() == testChord.ChordNotes[3].getNoteNumber())
-                                    bbc.FifthInto = SevenChordStep.VII;
-
-                                if (prevNotes[3].getNoteNumber() == testChord.ChordNotes[0].getNoteNumber())
-                                    bbc.SeventhInto = SevenChordStep.T;
-                                else if (prevNotes[3].getNoteNumber() == testChord.ChordNotes[1].getNoteNumber())
-                                    bbc.SeventhInto = SevenChordStep.III;
-                                else if (prevNotes[3].getNoteNumber() == testChord.ChordNotes[2].getNoteNumber())
-                                    bbc.SeventhInto = SevenChordStep.V;
-                                else if (prevNotes[3].getNoteNumber() == testChord.ChordNotes[3].getNoteNumber())
-                                    bbc.SeventhInto = SevenChordStep.VII;
-
-                                bbc.SizeDifference = testChord.GetChordSize() - prevSize;
-                                prevSize = testChord.GetChordSize();
-
-                                b.TheStepsTransitions.Add(bbc);
-
-                                for (int i = 0; i < 4; i++)
-                                    prevNotes[i] = testChord.ChordNotes[i];
-
-                                stepsTaken++; 
-                                
-                                // TODO : More complicated and trusted way to determine exact cycle
-                                if (testChord.ChordType == chordtype) simpleLoopFound++;
-                                if (testChord.ChordType == chordtype && testChord.Mode == mode && testChord.Inversion == inv) fullLoopFound++;
-                                if (fullLoopFound == 2)
-                                    b.Cyclic = true;
-
-                                if (stepsTaken > 27 && simpleLoopFound < 1)
-                                    break;
-                                if (stepsTaken > 55) 
-                                    break; 
-                            }
-
-
-                            if (b.Cyclic)
-                            { 
-                                b.LoopByTypeDistance = (stepsTaken / 2 + 1) / (simpleLoopFound / 2) - 1;
-                                b.FullLoopDistance = stepsTaken / 2  ;
-
-                                var sum = b.TheStepsTransitions.Sum(st => st.TonicMoved);
-                                if (sum == 0)
-                                    b.StayInPlace = true;
-                                else if (sum > 0)
-                                    b.MovingUp = true;
-                                else
-                                    b.MovingDown = true;
-
-                                b.TheApplications.RemoveRange(b.FullLoopDistance, b.TheApplications.Count - b.FullLoopDistance - 1);
-                                b.TheStepsTransitions.RemoveRange((b.FullLoopDistance -1) , b.TheStepsTransitions.Count -  b.FullLoopDistance );
-                                 
-                                if (origSize - prevSize == 0)
-                                    b.SizeKept = true;
-
-                                a.ApplicationsOnVariosChords.Add(b);
-                            } 
-                        }
-                if (a.ApplicationsOnVariosChords.Count > 0) 
-                    TransData.Add(a);
-                counttt++;
-                Console.WriteLine(TransData.Count + " :: " + counttt + " :: " + " [" + a.Formula[0] + "  " + a.Formula[1] + "  " + a.Formula[2] + "  " + a.Formula[3] + "] "  + a.ApplicationsOnVariosChords.Count);
-            }
+            var TransData = CalculateAllTransformations.CalculateTransDataForSevenChords(Transformations);
             // TODO: Inspect transformations on different chords for being equal 
 
             int kk = 0;
-
-
             kk = TransData.Max(t => t.ApplicationsOnVariosChords.Max(tt => tt.FullLoopDistance));
 
             int kasdf = 0;
@@ -372,16 +242,6 @@ namespace music_theory_cycles_001
         }
     } 
 
-    public class IntArrayComparer : IEqualityComparer<int[]>
-    {
-        public bool Equals(int[] x, int[] y)
-        {
-            return x[0] == y[0] && x[1] == y[1] && x[2] == y[2] && x[3] == y[3];
-        }
 
-        public int GetHashCode(int[] obj)
-        {
-            return (obj[0].ToString() + obj[1].ToString() + obj[2].ToString() + obj[3].ToString()).GetHashCode();
-        }
-    } 
+
 }
